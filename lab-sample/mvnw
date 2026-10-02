@@ -1,0 +1,92 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# Apache Maven Wrapper startup batch script, version 3.3.2
+# ----------------------------------------------------------------------------
+
+if [ -z "$MAVEN_SKIP_RC" ]; then
+  if [ -f /usr/local/etc/mavenrc ]; then
+    . /usr/local/etc/mavenrc
+  fi
+  if [ -f /etc/mavenrc ]; then
+    . /etc/mavenrc
+  fi
+  if [ -f "$HOME/.mavenrc" ]; then
+    . "$HOME/.mavenrc"
+  fi
+fi
+
+case "$(uname)" in
+CYGWIN* | MINGW*) cygwin=true ;;
+Darwin*)
+  darwin=true
+  if [ -z "$JAVA_HOME" ]; then
+    if [ -x "/usr/libexec/java_home" ]; then
+      JAVA_HOME="$(/usr/libexec/java_home)"
+      export JAVA_HOME
+    else
+      JAVA_HOME="/Library/Java/Home"
+      export JAVA_HOME
+    fi
+  fi
+  ;;
+esac
+
+if [ -z "$JAVA_HOME" ]; then
+  javaExecutable="$(which javac)"
+  if [ -n "$javaExecutable" ] && ! [ "$(expr "\"$javaExecutable\"" : '\([^ ]*\)')" = "no" ]; then
+    readLink=$(readlink -f "$javaExecutable" 2>/dev/null || readlink "$javaExecutable" 2>/dev/null || echo "$javaExecutable")
+    javaHome="$(dirname "$readLink")"
+    javaHome=$(expr "$javaHome" : '\(.*\)/bin')
+    JAVA_HOME="$javaHome"
+    export JAVA_HOME
+  fi
+fi
+
+if [ -z "$JAVACMD" ]; then
+  if [ -n "$JAVA_HOME" ]; then
+    if [ -x "$JAVA_HOME/jre/sh/java" ]; then
+      JAVACMD="$JAVA_HOME/jre/sh/java"
+    else
+      JAVACMD="$JAVA_HOME/bin/java"
+    fi
+  else
+    JAVACMD="$(command -v java)"
+  fi
+fi
+
+if [ ! -x "$JAVACMD" ] && ! command -v "$JAVACMD" >/dev/null 2>&1; then
+  echo "Error: JAVA_HOME is not defined correctly." >&2
+  echo "  We cannot execute $JAVACMD" >&2
+  exit 1
+fi
+
+if [ -z "$JAVA_HOME" ]; then
+  echo "Warning: JAVA_HOME environment variable is not set."
+fi
+
+BASE_DIR="$(cd "$(dirname "$0")" && pwd)"
+WRAPPER_JAR="$BASE_DIR/.mvn/wrapper/maven-wrapper.jar"
+WRAPPER_PROPERTIES="$BASE_DIR/.mvn/wrapper/maven-wrapper.properties"
+WRAPPER_LAUNCHER=org.apache.maven.wrapper.MavenWrapperMain
+
+if [ ! -f "$WRAPPER_JAR" ]; then
+  WRAPPER_URL="https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.3.2/maven-wrapper-3.3.2.jar"
+  if [ -f "$WRAPPER_PROPERTIES" ]; then
+    propUrl=$(grep "^wrapperUrl" "$WRAPPER_PROPERTIES" | cut -d'=' -f2-)
+    [ -n "$propUrl" ] && WRAPPER_URL="$propUrl"
+  fi
+  echo "Downloading Maven Wrapper from: $WRAPPER_URL"
+  if command -v curl >/dev/null 2>&1; then
+    curl -fsSL -o "$WRAPPER_JAR" "$WRAPPER_URL"
+  elif command -v wget >/dev/null 2>&1; then
+    wget -q -O "$WRAPPER_JAR" "$WRAPPER_URL"
+  else
+    echo "Error: neither curl nor wget is available to download the Maven Wrapper jar." >&2
+    exit 1
+  fi
+fi
+
+exec "$JAVACMD" \
+  -classpath "$WRAPPER_JAR" \
+  -Dmaven.multiModuleProjectDirectory="$BASE_DIR" \
+  "$WRAPPER_LAUNCHER" "$@"

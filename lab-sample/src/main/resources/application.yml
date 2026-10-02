@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: lab-sample
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/labdb}
+    username: ${DB_USER:lab}
+    password: ${DB_PASSWORD:change-me}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
