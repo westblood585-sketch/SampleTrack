@@ -1,5 +1,7 @@
 package com.lab.sample.controller;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.lab.sample.dto.TestDefinitionRequest;
 import com.lab.sample.dto.TestDefinitionResponse;
 import com.lab.sample.exception.ErrorResponse;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Tag(name = "Test Tanımları", description = "Laboratuvar test kataloğu (kod, ad, birim, referans aralığı)")
+@Slf4j
 @RestController
 @RequestMapping("/api/test-definitions")
 @RequiredArgsConstructor

@@ -1,5 +1,7 @@
 package com.lab.sample.exception;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 
 /** Pasif bir test numuneye atanmaya calisildi (422). */

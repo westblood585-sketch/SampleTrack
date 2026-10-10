@@ -54,6 +54,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnexpected(Exception ex, WebRequest request) {
+        log.error("Unhandled server exception occurred: ", ex);
         log.error("Beklenmeyen hata", ex);
         return build(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR",
                 "Beklenmeyen bir hata oluştu", request, List.of());

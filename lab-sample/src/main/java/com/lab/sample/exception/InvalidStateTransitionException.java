@@ -1,5 +1,7 @@
 package com.lab.sample.exception;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.lab.sample.entity.SampleStatus;
 import org.springframework.http.HttpStatus;
 

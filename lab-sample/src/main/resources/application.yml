@@ -19,3 +19,9 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     operations-sorter: method
+
+logging:
+  level:
+    root: ${ROOT_LOG_LEVEL:-INFO}
+    com.sampletrack: ${LOG_LEVEL:-INFO}
+    org.springframework.web: ${SPRING_LOG_LEVEL:-INFO}

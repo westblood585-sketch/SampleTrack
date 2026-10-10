@@ -1,5 +1,7 @@
 package com.lab.sample.exception;
 
+import lombok.extern.slf4j.Slf4j;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Tek bir alan icin dogrulama hatasi")

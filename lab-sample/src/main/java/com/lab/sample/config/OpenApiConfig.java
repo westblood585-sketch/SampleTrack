@@ -1,5 +1,7 @@
 package com.lab.sample.config;
 
+import lombok.extern.slf4j.Slf4j;
+
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;

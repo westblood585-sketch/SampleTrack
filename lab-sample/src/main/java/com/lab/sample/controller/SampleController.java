@@ -1,5 +1,7 @@
 package com.lab.sample.controller;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.lab.sample.dto.SampleCreateRequest;
 import com.lab.sample.dto.SampleDetailResponse;
 import com.lab.sample.dto.SampleRejectRequest;
@@ -27,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Numuneler", description = "Numune kabul, aşama geçişleri (başlat/reddet/tamamla) ve sonuç girişi")
+@Slf4j
 @RestController
 @RequestMapping("/api/samples")
 @RequiredArgsConstructor
@@ -45,6 +48,7 @@ public class SampleController {
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     @PostMapping
     public ResponseEntity<SampleDetailResponse> create(@Valid @RequestBody SampleCreateRequest request) {
+        log.info("Received sample creation/intake request");
         return ResponseEntity.status(HttpStatus.CREATED).body(sampleService.create(request));
     }
 
