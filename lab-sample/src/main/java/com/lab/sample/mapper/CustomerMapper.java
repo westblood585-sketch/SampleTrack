@@ -1,5 +1,7 @@
 package com.lab.sample.mapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.lab.sample.dto.CustomerRequest;
 import com.lab.sample.dto.CustomerResponse;
 import com.lab.sample.entity.Customer;

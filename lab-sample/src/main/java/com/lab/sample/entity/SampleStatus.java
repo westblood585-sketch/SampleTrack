@@ -1,5 +1,7 @@
 package com.lab.sample.entity;
 
+import lombok.extern.slf4j.Slf4j;
+
 /** Numunenin laboratuvardaki yasam dongusu asamalari. */
 public enum SampleStatus {
     RECEIVED,

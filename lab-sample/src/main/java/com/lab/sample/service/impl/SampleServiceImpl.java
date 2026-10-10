@@ -1,5 +1,7 @@
 package com.lab.sample.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.lab.sample.dto.SampleCreateRequest;
 import com.lab.sample.dto.SampleDetailResponse;
 import com.lab.sample.dto.SampleRejectRequest;
@@ -41,6 +43,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional

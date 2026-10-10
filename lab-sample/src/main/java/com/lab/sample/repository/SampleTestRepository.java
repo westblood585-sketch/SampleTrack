@@ -1,5 +1,7 @@
 package com.lab.sample.repository;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.lab.sample.entity.SampleTest;
 import com.lab.sample.entity.SampleTestStatus;
 import org.springframework.data.jpa.repository.JpaRepository;

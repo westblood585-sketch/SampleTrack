@@ -1,5 +1,7 @@
 package com.lab.sample.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.lab.sample.dto.ResultFlag;
 
 import java.math.BigDecimal;

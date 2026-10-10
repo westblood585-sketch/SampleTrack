@@ -1,5 +1,7 @@
 package com.lab.sample.dto;
 
+import lombok.extern.slf4j.Slf4j;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

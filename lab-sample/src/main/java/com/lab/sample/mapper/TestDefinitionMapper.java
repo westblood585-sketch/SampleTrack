@@ -1,5 +1,7 @@
 package com.lab.sample.mapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.lab.sample.dto.TestDefinitionRequest;
 import com.lab.sample.dto.TestDefinitionResponse;
 import com.lab.sample.entity.TestDefinition;

@@ -1,5 +1,7 @@
 package com.lab.sample.config;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.lab.sample.entity.Customer;
 import com.lab.sample.entity.TestDefinition;
 import com.lab.sample.repository.CustomerRepository;

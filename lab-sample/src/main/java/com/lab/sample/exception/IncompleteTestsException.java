@@ -1,5 +1,7 @@
 package com.lab.sample.exception;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 
 /** Is kurali 3: tum testler bitmeden numune COMPLETED olamaz (422). */

@@ -27,11 +27,12 @@ geçirmesini ve test sonuçları üretmesini uçtan uca yöneten tam yığın (f
 - [Özellikler](#özellikler)
 - [Domain Modeli](#domain-modeli)
 - [Numune Durum Makinesi](#numune-durum-makinesi)
-- [İş Kuralları](#i̇ş-kuralları)
+- [İş Kuralları](#iş-kuralları)
 - [Mimari](#mimari)
 - [Proje Yapısı](#proje-yapısı)
 - [Hızlı Başlangıç](#hızlı-başlangıç)
 - [Ortam Değişkenleri](#ortam-değişkenleri)
+- [Logging & Observability](#logging--observability)
 - [API Referansı](#api-referansı)
 - [Ekranlar](#ekranlar)
 - [Test ve Kapsama](#test-ve-kapsama)
@@ -61,6 +62,7 @@ Sistem bu akışı hem güçlü bir REST API ile hem de kullanıcı dostu bir we
 - 🧾 Referans aralığına göre otomatik sonuç etiketleme (normal / düşük / yüksek)
 - 📜 Her durum değişikliği için denetim (audit) kaydı
 - 📑 Swagger/OpenAPI ile tam dokümante edilmiş API
+- 🔍 Lombok `@Slf4j` ile yapılandırılmış loglama ve KVKK/GDPR uyumu
 - ✅ %72 test kapsamı, Sonar temiz kod tabanı
 
 ## Domain Modeli
@@ -79,11 +81,10 @@ ER diyagramı: [`lab-sample/lab-sample-erd.drawio`](./lab-sample/lab-sample-erd.
 
 ## Numune Durum Makinesi
 
-```
 RECEIVED → IN_PROGRESS → COMPLETED
-    │           │
-    └───────────┴──→ REJECTED
-```
+│           │
+└───────────┴──→ REJECTED
+
 
 Geçişler `SampleStateMachine` sınıfında merkezi olarak tanımlıdır.
 `COMPLETED` ve `REJECTED` terminal durumlardır; buradan başka bir duruma geçiş yapılamaz.
@@ -101,34 +102,31 @@ Geçişler `SampleStateMachine` sınıfında merkezi olarak tanımlıdır.
 
 **Backend** — katmanlı mimari:
 
-```
-controller  → HTTP, DTO doğrulama, Swagger anotasyonları
-service     → iş kuralları, durum makinesi, transaction sınırı
+controller  → HTTP, DTO doğrulama, Swagger anotasyonları, @Slf4j info logları
+service     → iş kuralları, durum makinesi, kilit/filtreleme debug logları
 repository  → Spring Data JPA (Derived Query / JPQL, native SQL yok)
 entity      → JPA @Entity (API dışına açılmaz)
 dto         → record tabanlı istek/yanıt sözleşmeleri
 mapper      → MapStruct (entity ↔ dto)
-exception   → @RestControllerAdvice ile standart hata DTO'su
-```
+exception   → @RestControllerAdvice ile standart hata DTO'su (warn/error logları)
+
 
 Hata yanıtları tek bir formatta döner (`ErrorResponse`): zaman damgası, HTTP durumu,
 makine-okunur hata kodu, mesaj, istek yolu ve varsa alan bazlı doğrulama hataları.
 
 **Frontend** — sayfa/bileşen/servis ayrımı:
 
-```
 pages       → her ekran için bir sayfa bileşeni
 components  → tekrar kullanılabilir UI parçaları (StatusBadge, Modal, Stepper...)
 api         → backend endpoint'lerini saran ince istemci fonksiyonları
 lib         → fetch wrapper, biçimlendirme yardımcıları
 types       → backend DTO'larıyla birebir eşleşen TypeScript tipleri
-```
+
 
 ## Proje Yapısı
 
-```
 .
-├── lab-sample/              # Backend (Spring Boot)
+├── lab-sample/              # Backend (Spring Boot 3 + PostgreSQL)
 │   ├── src/main/java/com/lab/sample/
 │   │   ├── controller/
 │   │   ├── service/
@@ -144,13 +142,13 @@ types       → backend DTO'larıyla birebir eşleşen TypeScript tipleri
 │   ├── Dockerfile
 │   ├── .env.example
 │   └── pom.xml
-└── lab-sample-ui/            # Frontend (React + Vite)
-    └── src/
-        ├── pages/
-        ├── components/
-        ├── api/
-        └── types/
-```
+└── lab-sample-ui/            # Frontend (React + Vite + TypeScript)
+└── src/
+├── pages/
+├── components/
+├── api/
+└── types/
+
 
 ## Hızlı Başlangıç
 
@@ -167,110 +165,3 @@ Veritabanı kimlik bilgileri repoda **sabit kodlanmamıştır**.
 ```bash
 cd lab-sample
 cp .env.example .env
-```
-
-`.env` dosyasını açıp `POSTGRES_PASSWORD` değerini kendi şifrenle değiştir.
-Bu dosya `.gitignore` içinde olduğu için versiyon kontrolüne dahil edilmez.
-
-### 2. Veritabanını başlat
-
-```bash
-docker compose up -d postgres
-```
-
-### 3. Backend'i çalıştır
-
-```bash
-./mvnw spring-boot:run -Dspring-boot.run.profiles=seed
-```
-
-`seed` profili örnek müşteri ve test kataloğuyla başlatır (opsiyonel).
-API: `http://localhost:8080` · Swagger UI: `http://localhost:8080/swagger-ui.html`
-
-### 4. Frontend'i çalıştır
-
-```bash
-cd ../lab-sample-ui
-npm install
-npm run dev
-```
-
-Arayüz: `http://localhost:5173` (port doluysa Vite otomatik başka bir port seçer)
-
-### Alternatif: Docker ile tam ortam
-
-```bash
-cd lab-sample
-docker compose up --build
-```
-
-## Ortam Değişkenleri
-
-| Değişken | Açıklama | Varsayılan (örnek) |
-|---|---|---|
-| `POSTGRES_DB` | Veritabanı adı | `labdb` |
-| `POSTGRES_USER` | Veritabanı kullanıcısı | `lab` |
-| `POSTGRES_PASSWORD` | Veritabanı şifresi | *(kendi değerini gir)* |
-| `VITE_API_BASE_URL` | Frontend'in bağlanacağı API adresi | `http://localhost:8080` |
-
-## API Referansı
-
-| Yöntem | Yol | Açıklama |
-|---|---|---|
-| `POST` | `/api/customers` | Müşteri oluştur |
-| `GET` | `/api/customers/{id}` | Müşteri detayı |
-| `GET` | `/api/customers` | Müşterileri sayfalı listele |
-| `POST` | `/api/test-definitions` | Test tanımı oluştur |
-| `PUT` | `/api/test-definitions/{id}` | Test tanımını güncelle |
-| `PATCH` | `/api/test-definitions/{id}/active` | Aktif/pasif yap |
-| `GET` | `/api/test-definitions` | Test tanımlarını listele |
-| `POST` | `/api/samples` | Numune kabul et |
-| `GET` | `/api/samples/{id}` | Numune detayı (testler, sonuçlar, geçmiş) |
-| `GET` | `/api/samples` | Numuneleri filtreli listele (`status`, `customerId`, `barcode`) |
-| `POST` | `/api/samples/{id}/start` | RECEIVED → IN_PROGRESS |
-| `POST` | `/api/samples/{id}/reject` | Numuneyi reddet (gerekçe zorunlu) |
-| `POST` | `/api/samples/{id}/complete` | Numuneyi tamamla |
-| `POST` | `/api/samples/{sampleId}/tests/{sampleTestId}/result` | Test sonucu gir |
-
-Tüm endpoint ve DTO alanları Swagger UI üzerinden detaylı açıklamalarla görülebilir.
-
-## Ekranlar
-
-| Ekran | İçerik |
-|---|---|
-| **Panel** | Durum bazlı özet kartları, son numuneler |
-| **Numuneler** | Durum + barkod filtresi, sayfalı liste |
-| **Numune Kabul Et** | Müşteri seçimi + çoklu test seçimiyle numune oluşturma |
-| **Numune Detayı** | Durum stepper'ı, satır içi sonuç girişi, referans aralığı uyarıları, aşama geçmişi, aksiyon butonları |
-| **Test Tanımları** | Katalog yönetimi, referans aralığı, aktif/pasif geçişi |
-| **Müşteriler** | Liste ve düzenleme |
-
-## Test ve Kapsama
-
-```bash
-cd lab-sample
-./mvnw verify
-```
-
-- **Unit testler**: servis katmanı (Mockito), durum makinesi, referans aralığı hesaplayıcı — veritabanı gerektirmez.
-- **Integration testler**: repository katmanı ve uçtan uca (MockMvc) senaryolar, Testcontainers ile gerçek PostgreSQL üzerinde çalışır (Docker gereklidir).
-- **JaCoCo**: `./mvnw verify` sonunda `target/site/jacoco/index.html` raporu üretir; kapsama %70'in altındaysa build başarısız olur.
-
-**Son durum:** 42/42 test başarılı, toplam satır kapsaması **%72**.
-
-## Kod Kalitesi
-
-Proje SonarLint ile taranmıştır; **Blocker, Critical veya Major seviyesinde bulgu bulunmamaktadır.**
-Katmanlı mimari, DTO/Mapper ayrımı ve merkezi hata yönetimi ile sürdürülebilir bir kod tabanı hedeflenmiştir.
-
-## Proje Dosyaları
-
-- `lab-sample/lab-sample-erd.drawio` — veritabanı ER modeli
-- `lab-sample/docker-compose.yml` — PostgreSQL + opsiyonel uygulama servisi (kimlik bilgileri `.env`'den okunur)
-- `lab-sample/.env.example` — örnek ortam değişkenleri şablonu (gerçek şifre içermez)
-- `lab-sample/Dockerfile` — çok aşamalı (multi-stage) uygulama imajı
-- `lab-sample-ui/` — React frontend kaynak kodu
-
-## Lisans
-
-Bu proje bir eğitim/değerlendirme çalışması olarak geliştirilmiştir.

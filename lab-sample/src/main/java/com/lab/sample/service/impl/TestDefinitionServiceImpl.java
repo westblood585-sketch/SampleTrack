@@ -1,5 +1,7 @@
 package com.lab.sample.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.lab.sample.dto.TestDefinitionRequest;
 import com.lab.sample.dto.TestDefinitionResponse;
 import com.lab.sample.entity.TestDefinition;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional

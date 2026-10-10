@@ -1,5 +1,7 @@
 package com.lab.sample.service;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.lab.sample.dto.TestDefinitionRequest;
 import com.lab.sample.dto.TestDefinitionResponse;
 

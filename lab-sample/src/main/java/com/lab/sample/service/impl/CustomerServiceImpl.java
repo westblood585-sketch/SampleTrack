@@ -1,5 +1,7 @@
 package com.lab.sample.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.lab.sample.dto.CustomerRequest;
 import com.lab.sample.dto.CustomerResponse;
 import com.lab.sample.entity.Customer;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional

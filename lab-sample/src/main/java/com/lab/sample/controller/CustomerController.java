@@ -1,5 +1,7 @@
 package com.lab.sample.controller;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.lab.sample.dto.CustomerRequest;
 import com.lab.sample.dto.CustomerResponse;
 import com.lab.sample.exception.ErrorResponse;
@@ -22,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Müşteriler", description = "Numune gönderen müşteri (klinik/hastane) kayıtları")
+@Slf4j
 @RestController
 @RequestMapping("/api/customers")
 @RequiredArgsConstructor
